@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"ShareLA-ElasticSearch/constants"
+	"sharela-elasticsearch/constants"
 
 	"github.com/olivere/elastic/v7"
 )
