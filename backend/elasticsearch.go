@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"sharela-elasticsearch/constants"
+	"sharela/constants"
+	"sharela/util"
 
 	"github.com/olivere/elastic/v7"
 )
@@ -30,17 +31,29 @@ func (backend *ElasticsearchBackend) ReadFromES(query elastic.Query, index strin
 	return searchResult, nil
 }
 
-func (backend ElasticsearchBackend) DeleteFromES() {
+func (backend *ElasticsearchBackend) DeleteFromES(query elastic.Query, index string) error {
+	_, err := backend.client.DeleteByQuery().
+		Index(index).
+		Query(query).
+		Pretty(true).
+		Do(context.Background())
 
+	return err
 }
 
-func InitElasticsearchBackend() {
-	client, err := elastic.NewClient(
-		elastic.SetURL(constants.ES_URL),
-		elastic.SetBasicAuth(constants.ES_USERNAME, constants.ES_PASSWORD),
-	)
+func (backend *ElasticsearchBackend) SaveToES(i interface{}, index string, id string) error {
+	_, err := backend.client.Index().
+		Index(index).
+		Id(id).
+		BodyJson(i).
+		Do(context.Background())
+	return err
+}
 
-	// handle error
+func InitElasticsearchBackend(config *util.ElasticsearchInfo) {
+	client, err := elastic.NewClient(
+		elastic.SetURL(config.Address),
+		elastic.SetBasicAuth(config.Username, config.Password))
 	if err != nil {
 		panic(err)
 	}
