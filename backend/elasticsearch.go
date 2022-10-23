@@ -18,8 +18,8 @@ type ElasticsearchBackend struct {
 	client *elastic.Client
 }
 
-func (backend *ElasticsearchBackend) ReadFromES(query elastic.Query, index string) (*elastic.SearchResult, error) {
-	searchResult, err := backend.client.Search().
+func (this *ElasticsearchBackend) ReadFromES(query elastic.Query, index string) (*elastic.SearchResult, error) {
+	searchResult, err := this.client.Search().
 		Index(index).
 		Query(query).
 		Pretty(true).
@@ -31,8 +31,8 @@ func (backend *ElasticsearchBackend) ReadFromES(query elastic.Query, index strin
 	return searchResult, nil
 }
 
-func (backend *ElasticsearchBackend) DeleteFromES(query elastic.Query, index string) error {
-	_, err := backend.client.DeleteByQuery().
+func (this *ElasticsearchBackend) DeleteFromES(query elastic.Query, index string) error {
+	_, err := this.client.DeleteByQuery().
 		Index(index).
 		Query(query).
 		Pretty(true).
@@ -41,8 +41,8 @@ func (backend *ElasticsearchBackend) DeleteFromES(query elastic.Query, index str
 	return err
 }
 
-func (backend *ElasticsearchBackend) SaveToES(i interface{}, index string, id string) error {
-	_, err := backend.client.Index().
+func (this *ElasticsearchBackend) SaveToES(i interface{}, index string, id string) error {
+	_, err := this.client.Index().
 		Index(index).
 		Id(id).
 		BodyJson(i).
