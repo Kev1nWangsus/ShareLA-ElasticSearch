@@ -20,10 +20,10 @@ type ElasticsearchBackend struct {
 
 func (this *ElasticsearchBackend) ReadFromES(query elastic.Query, index string) (*elastic.SearchResult, error) {
 	searchResult, err := this.client.Search().
-		Index(index).
-		Query(query).
-		Pretty(true).
-		Do(context.Background())
+		Index(index).            // index
+		Query(query).            // where
+		Pretty(true).            // format
+		Do(context.Background()) // execute
 	if err != nil {
 		return nil, err
 	}
@@ -33,10 +33,10 @@ func (this *ElasticsearchBackend) ReadFromES(query elastic.Query, index string) 
 
 func (this *ElasticsearchBackend) DeleteFromES(query elastic.Query, index string) error {
 	_, err := this.client.DeleteByQuery().
-		Index(index).
-		Query(query).
-		Pretty(true).
-		Do(context.Background())
+		Index(index).            // index
+		Query(query).            // where
+		Pretty(true).            // format
+		Do(context.Background()) // execute
 
 	return err
 }

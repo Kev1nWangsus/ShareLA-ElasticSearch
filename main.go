@@ -5,12 +5,20 @@ import (
 	"log"
 	"net/http"
 
-	"sharela-elasticsearch/backend"
-	"sharela-elasticsearch/handler"
+	"sharela/backend"
+	"sharela/handler"
+	"sharela/util"
 )
 
 func main() {
 	fmt.Println("started-service")
-	backend.InitElasticsearchBackend()
-	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter()))
+	config, err := util.LoadApplicationConfig("conf", "deploy.yml")
+	if err != nil {
+		panic(err)
+	}
+
+	backend.InitElasticsearchBackend(config.ElasticsearchConfig)
+	backend.InitGCSBackend(config.GCSConfig)
+
+	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter(config.TokenConfig)))
 }
